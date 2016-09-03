@@ -40,10 +40,14 @@
 thirtyMinInSeconds="$((30*60))" #1800 (seconds).
 oneMinInSeconds=60 
 
-sleep $((thirtyMinInSeconds - 5)) #testing out with one minute
-notify-send "Locking screen in 5 seconds!"
-sleep 4
-gnome-screensaver-command -l
+function notify_and_lock {
+    sleep $((thirtyMinInSeconds - 5))
+    notify-send "Locking screen in 5 seconds!"
+    sleep 4
+    gnome-screensaver-command -l
+}
+
+notify_and_lock
 
 #below: will continuously check unlock time and compare with current time. 
 #This is needed to "refresh" unlock time variable.
@@ -59,10 +63,8 @@ do
     currentTime=$(date +%s)
     timeDifference=$((currentTime - unlockedTime)) #gives the difference in years, months, and days (in terms of seconds)
    
-    if [ $timeDifference -eq $((thirtyMinInSeconds - 5)) ]
+    if [ $timeDifference -eq $((oneMinInSeconds - 5)) ]
     then
-        notify-send "Locking screen in 5 seconds!"
-        sleep 4
-        gnome-screensaver-command -l
+        notify_and_lock
     fi
 done
