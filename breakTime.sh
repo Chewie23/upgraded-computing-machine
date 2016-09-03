@@ -63,7 +63,7 @@ do
     currentTime=$(date +%s)
     timeDifference=$((currentTime - unlockedTime)) #gives the difference in years, months, and days (in terms of seconds)
    
-    if [ $timeDifference -eq $((oneMinInSeconds - 5)) ]
+    if [ $timeDifference -eq $((thirtyMinInSeconds - 5)) ]
     then
         notify_and_lock
     fi
