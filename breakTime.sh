@@ -42,7 +42,7 @@ oneMinInSeconds=60
 
 function notify_and_lock {
     sleep $((thirtyMinInSeconds - 5))
-    notify-send "Locking screen in 5 seconds!"
+    notify-send -u critical "Locking screen in 5 seconds!" #"critical" urgency, so it pops up in foreground
     sleep 4
     gnome-screensaver-command -l
 }
