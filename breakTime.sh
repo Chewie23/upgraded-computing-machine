@@ -46,25 +46,26 @@ function notify_and_lock {
     gnome-screensaver-command -l
 }
 
-sleep $((thirtyMinInSeconds - 5))
-notify_and_lock
+function lock_thirty_min_after {
+    isoUTC=$(journalctl -o short-iso -b 0 -r |grep -m1 "$1" |awk '{print $1}') #grabs the iso_UTC time you last unlocked the computer, using argument "$1". 
+    unlockedTime=$(date -d "$isoUTC" +%s) #gets the Epoch time of unlock time of UTC        
+    currentTime=$(date +%s)
+    timeDifference=$((currentTime - unlockedTime))
+    
+    if [ $timeDifference -eq $((thirtyMinInSeconds - 5)) ]
+    then
+        notify_and_lock
+    fi   
+}
 
 #below: will continuously check unlock time and compare with current time. 
 #This is needed to "refresh" unlock time variable.
 #Maybe slightly inefficient, but could not find an easy way of checking unlock time and lock time in a general fashion
 
 #Strange behaviour: when you boot up for the first time, the command: "journalctl -b 0 |grep "unlocked" will NOT work in terminal. Don't know if this is a bug or not
+
 while true
 do
-    isoUTC=$(journalctl -o short-iso -b 0 -r |grep -m1 "unlocked" |awk '{print $1}')
-    #grabs the last time you unlocked the computer. Maybe have the original script go (w/o while loop) and then this
-
-    unlockedTime=$(date -d "$isoUTC" +%s) #gets the Epoch time of unlock time of UTC        
-    currentTime=$(date +%s)
-    timeDifference=$((currentTime - unlockedTime)) #gives the difference in years, months, and days (in terms of seconds)
-   
-    if [ $timeDifference -eq $((thirtyMinInSeconds - 5)) ]
-    then
-        notify_and_lock
-    fi
+    lock_thirty_min_after AuthenticationAgent #function arg1
+    lock_thirty_min_after unlocked
 done
