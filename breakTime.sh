@@ -25,28 +25,32 @@
 
     #You want the file extension to end in ".desktop" (Ex. breakTime.sh.desktop) when you put it in the appropriate place
 
-    #[Desktop Entry]
-    #Type=Application
-    #Exec="~/UnixScript/breakTime.sh"
-    #Hidden=false
-    #NoDisplay=false
-    #X-GNOME-Autostart-enabled=true
-    #Name[en_IN]=BreakTime
-    #Name=BreakTime
-    #Comment[en_IN]=AnyComment
-    #Comment=AnyComment
+#[Desktop Entry]
+#Type=Application
+#Exec="~/UnixScript/breakTime.sh"
+#Hidden=false
+#NoDisplay=false
+#X-GNOME-Autostart-enabled=true
+#Name[en_IN]=BreakTime
+#Name=BreakTime
+#Comment[en_IN]=AnyComment
+#Comment=AnyComment
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+#SOMETHING IS WRONG HERE. LOCKS ONCE AND THAT'S IT. NO LONGER LOOPS AND LOCKS. WHAT IS GOING ON??????
+
 
 thirtyMinInSeconds="$((30*60))" #1800 (seconds).
 oneMinInSeconds=60 
 
 function notify_and_lock {
-    sleep $((thirtyMinInSeconds - 5))
-    notify-send "Locking screen in 5 seconds!"
+    notify-send -u critical "Locking screen in 5 seconds!"
     sleep 4
     gnome-screensaver-command -l
 }
 
+sleep $((thirtyMinInSeconds - 5))
 notify_and_lock
 
 #below: will continuously check unlock time and compare with current time. 
