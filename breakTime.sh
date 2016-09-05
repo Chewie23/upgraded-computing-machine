@@ -37,10 +37,6 @@
 #Comment=AnyComment
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-#SOMETHING IS WRONG HERE. LOCKS ONCE AND THAT'S IT. NO LONGER LOOPS AND LOCKS. WHAT IS GOING ON??????
-
-
 thirtyMinInSeconds="$((30*60))" #1800 (seconds).
 oneMinInSeconds=60 
 
