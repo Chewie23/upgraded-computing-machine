@@ -41,8 +41,8 @@ thirtyMinInSeconds="$((30*60))" #1800 (seconds).
 oneMinInSeconds=60 
 
 function notify_and_lock {
-    notify-send -u critical "Locking screen in 5 seconds!"
-    sleep 4
+    notify-send -u critical "Locking screen in 10 seconds!"
+    sleep 10
     gnome-screensaver-command -l
 }
 
@@ -52,7 +52,9 @@ function lock_thirty_min_after {
     currentTime=$(date +%s)
     timeDifference=$((currentTime - unlockedTime))
     
-    if [ $timeDifference -eq $((thirtyMinInSeconds - 5)) ]
+    echo $timeDifference
+
+    if [ $timeDifference -eq $((thirtyMinInSeconds - 10)) ]
     then
         notify_and_lock
     fi   
