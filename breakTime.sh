@@ -47,14 +47,17 @@ function notify_and_lock {
 }
 
 function lock_thirty_min_after {
-    isoUTC=$(journalctl -o short-iso -b 0 -r |grep -m1 "$1" |awk '{print $1}') 
-    #grabs the iso_UTC time you last unlocked the computer, using argument "$1". 
+    sleep 1                               #This is here to reduce CPU usage
+    isoUTC=$(journalctl -o short-iso -b 0 -r |grep -m1 "$1" |awk '{print $1}') #grabs the iso_UTC time
+                                                                               #the computer last unlocked, 
+                                                                               #using argument "$1", 
+                                                                               #which is "AuthenticationAgent" or "unlocked" 
+    
     unlockedTime=$(date -d "$isoUTC" +%s) #gets the Epoch time of unlock time of UTC        
     currentTime=$(date +%s)
     timeDifference=$((currentTime - unlockedTime))
 
-    if [ $timeDifference -eq $((thirtyMinInSeconds - 10)) ]
-    then
+    if [ $timeDifference -ge $((thirtyMinInSeconds - 10)) ]; then
         notify_and_lock
     fi   
 }
@@ -65,8 +68,12 @@ function lock_thirty_min_after {
 
 #Strange behaviour: when you boot up for the first time, the command: "journalctl -b 0 |grep "unlocked" will NOT work in terminal. Don't know if this is a bug or not
 
-while true
-do
-    lock_thirty_min_after AuthenticationAgent #Syntax is: <function> <arg1>
-    lock_thirty_min_after unlocked
+#Have to separate the checks against AuthenticationAgent and "unlocked"
+while ! journalctl -o short-iso -b 0 -r | grep -qm1 "unlocked"; do
+    lock_thirty_min_after AuthenticationAgent
+    sleep 10 #this is here, so we don't lock the computer right after logging back in
+done
+
+while true; do
+    lock_thirty_min_after unlocked  #This is for every other time after we log back in after locked screen
 done
