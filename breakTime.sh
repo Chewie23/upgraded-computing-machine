@@ -37,8 +37,8 @@
 #Comment=AnyComment
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-thirtyMinInSeconds="$((30*60))" #1800 (seconds).
-oneMinInSeconds=60 
+thirtyMinInSeconds="$((30 * 60))"  #1800 (seconds).
+fifteenMinInSeconds="$((15 * 60))" #900 (seconds)
 
 function notify_and_lock {
     notify-send -u critical "Locking screen in 10 seconds!"
@@ -71,7 +71,7 @@ function lock_thirty_min_after {
 #Have to separate the checks against AuthenticationAgent and "unlocked"
 while ! journalctl -o short-iso -b 0 -r | grep -qm1 "unlocked"; do
     lock_thirty_min_after AuthenticationAgent
-    sleep 10 #this is here, so we don't lock the computer right after logging back in
+    sleep fifteenMinInSeconds #this is here, so we don't lock the computer right after logging back in
 done
 
 while true; do
