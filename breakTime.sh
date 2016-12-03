@@ -76,4 +76,5 @@ done
 
 while true; do
     lock_thirty_min_after unlocked  #This is for every other time after we log back in after locked screen
+    sleep fifteenMinInSeconds
 done
