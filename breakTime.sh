@@ -38,7 +38,7 @@
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 thirtyMinInSeconds="$((30 * 60))"  #1800 (seconds).
-tenMinInSeconds="$((105 * 60))" #600 (seconds)
+tenMinInSeconds="$((105 * 60))"    #600 (seconds)
 twentyMinInSeconds="$((20 * 60))"  #1200
 
 function notify_and_lock {
@@ -70,23 +70,13 @@ function lock_thirty_min_after {
 #Strange behaviour: when you boot up for the first time, the command: "journalctl -b 0 |grep "unlocked" will NOT work in terminal. Don't know if this is a bug or not
 
 
-#BUG
-#Depending on WHEN I come back, the locking mechanism may activate because it is no longer sleeping and it is actively checking last log in time
-#this means I could potentially come back to the computer, log in JUST to have to lock the screen again. 
-#There has to be a way to avoid this
-
-#Question: How long does it take Ubuntu to update its logs? I assume 10 seconds. If so, then maybe I can use that info?
-#Like have a 'sleep 10' BEFORE the 'lock_thirty_min_after() fxn
-
 sleep twentyMinInSeconds
 
 #Have to separate the checks against AuthenticationAgent and "unlocked"
 while ! journalctl -o short-iso -b 0 -r | grep -qm1 "unlocked"; do
-    #sleep fifteenMinInSeconds #this is here, so we don't lock the computer right after logging back in
     lock_thirty_min_after AuthenticationAgent
 done
 
 while true; do
     lock_thirty_min_after unlocked  #This is for every other time after we log back in after locked screen
-    #sleep fifteenMinInSeconds
 done
